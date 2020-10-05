@@ -14,12 +14,12 @@ def run_parse(start_date: str, end_date: str = None):
     delta_days = 0
     while WORK:
         curent_date = start + timedelta(days=delta_days)
-        tut_by = TutBy(curent_date.strftime("%d.%m.%Y"))
-        tut_by.parse_bs()
-        for news in tut_by:
-            # запишем в базу
-            pass
-        print("WORKED")
+        # tut_by = TutBy(curent_date.strftime("%d.%m.%Y"))
+        # tut_by.parse_bs()
+        # for news in tut_by:
+        #     # запишем в базу
+        #     pass
+        # print("WORKED")
         if curent_date == end:
             WORK = False
         else:

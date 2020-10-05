@@ -41,7 +41,7 @@ def create_parser():
         "-s",
         "--start",
         dest="start_date",
-        required=True,
+        required=False,
         help="Начальная дата.",
     )
     parser.add_argument(

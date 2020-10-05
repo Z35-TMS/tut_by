@@ -5,9 +5,10 @@ WORK = True
 
 
 def run_parse(start_date: str, end_date: str = None):
-    start = date.strptime(start_date, "%d.%m.%Y")
+    global WORK
+    start = date(*[int(el) for el in start_date.split(".")[::-1]])
     if end_date is not None:
-        end = date.strptime(end_date, "%d.%m.%Y")
+        end = date(*[int(el) for el in end_date.split(".")[::-1]])
     else:
         end = date.today()
     delta_days = 0
@@ -18,7 +19,8 @@ def run_parse(start_date: str, end_date: str = None):
         for news in tut_by:
             # запишем в базу
             pass
-        if curent_date = end:
+        print("WORKED")
+        if curent_date == end:
             WORK = False
         else:
             delta_days += 1
@@ -27,4 +29,5 @@ def run_parse(start_date: str, end_date: str = None):
 
 
 def stop_parse():
+    global WORK
     WORK = False

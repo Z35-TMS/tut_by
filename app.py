@@ -66,6 +66,9 @@ def stop_handler(signum, frame):
     stop_parse()
 
 def start(daemon):
+    arguments = {"start_date": args.start_date}
+    if args.end_date is not None:
+        arguments.update(end_date=args.end_date)
     if daemon:
         if os.path.isfile(PID_PATH):
             print("Сервер уже работает!")
@@ -76,7 +79,7 @@ def start(daemon):
                 pid_file.write(str(os.getpid()))
             signal.signal(signal.SIGTERM, stop_handler)
             try:
-                run_parse()
+                run_parse(**arguments)
             except Exception:
                 pass
             finally:
@@ -88,7 +91,10 @@ def start(daemon):
             print("Программа запущена в фоновом режиме.")
             return
     else:
-        run_parse()
+        try:
+            run_parse(**arguments)
+        except KeyboardInterrupt:
+            stop_parse()
 
 def stop(daemon):
     if daemon:

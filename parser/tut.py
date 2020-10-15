@@ -58,10 +58,15 @@ class TutBy:
         html = BS(html_text, features="html5lib")
         head = html.find("div", attrs={"class": "m_header"})
         news_body = html.find("div", attrs={"id": "article_body"})
-        head = head.get_text()
         news_p = news_body.find_all("p")
         text = "".join([p.get_text() for p in news_p])
-        return head, text.replace("\xa0", " ").replace("&nbsp;", " ")
+        text = text.replace("\xa0", " ").replace("&nbsp;", " ")
+        head = head.get_text()
+        # if head is not None:
+        #     head = head.get_text()
+        # else:
+        #     head = text.split(".")[0]
+        return head, text
 
 
     def get_news(self):
@@ -76,9 +81,13 @@ class TutBy:
         for n in news:
             record = {"rubric": n["rubric"], "news": []}
             for text in n["texts"]:
-                head, text = self._parse_news(text)
+                try:
+                    head, text = self._parse_news(text)
+                except AttributeError:
+                    continue
                 record["news"].append({"head": head, "text": text}) 
             self.__news.append(record)
+        print(self.__news[0].keys())
 
     def __iter__(self):
         self.__cursor = 0

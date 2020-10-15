@@ -1,7 +1,11 @@
+import os
+import json
 from .tut import TutBy
 from datetime import date, timedelta
 
 WORK = True
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def run_parse(start_date: str, end_date: str = None):
@@ -14,12 +18,36 @@ def run_parse(start_date: str, end_date: str = None):
     delta_days = 0
     while WORK:
         curent_date = start + timedelta(days=delta_days)
-        # tut_by = TutBy(curent_date.strftime("%d.%m.%Y"))
-        # tut_by.parse_bs()
-        # for news in tut_by:
-        #     # запишем в базу
-        #     pass
-        # print("WORKED")
+        tut_by = TutBy(curent_date.strftime("%d.%m.%Y"))
+        tut_by.get_rubrics()
+        tut_by.get_news()
+        if not os.path.isdir(
+            os.path.join(
+                BASE_DIR,
+                "news",
+                curent_date.strftime("%d.%m.%Y"),
+            )
+        ):
+            os.makedirs(
+                os.path.join(
+                    BASE_DIR,
+                    "news",
+                    curent_date.strftime("%d.%m.%Y"),
+                )
+            )
+        for news in tut_by:
+            with open(
+                os.path.join(
+                    BASE_DIR,
+                    "news",
+                    curent_date.strftime("%d.%m.%Y"),
+                    news["rubric"] + ".json",
+                ),
+                "w",
+            ) as file:
+                file.write(
+                    json.dumps(news["news"]),
+                )
         if curent_date == end:
             WORK = False
         else:
